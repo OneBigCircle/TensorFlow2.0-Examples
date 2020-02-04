@@ -24,10 +24,13 @@ def load_weights(model, weights_file):
     wf = open(weights_file, 'rb')
     major, minor, revision, seen, _ = np.fromfile(wf, dtype=np.int32, count=5)
 
+    conv_layer_names = [layer.name for layer in model.layers if layer.name.startswith('conv2d')]
+    bn_layer_names = [layer.name for layer in model.layers if layer.name.startswith('batch_normalization')]
+
     j = 0
     for i in range(75):
-        conv_layer_name = 'conv2d_%d' %i if i > 0 else 'conv2d'
-        bn_layer_name = 'batch_normalization_%d' %j if j > 0 else 'batch_normalization'
+        conv_layer_name = conv_layer_names[i] if i < len(conv_layer_names) else 'conv2d'
+        bn_layer_name = bn_layer_names[j] if j < len(bn_layer_names) else 'batch_normalization'
 
         conv_layer = model.get_layer(conv_layer_name)
         filters = conv_layer.filters
