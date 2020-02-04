@@ -27,6 +27,16 @@ def load_weights(model, weights_file):
     conv_layer_names = [layer.name for layer in model.layers if layer.name.startswith('conv2d')]
     bn_layer_names = [layer.name for layer in model.layers if layer.name.startswith('batch_normalization')]
 
+    # Last 5 convolution layers are out of order - 65, 57, 74, 66, 58.
+    conv_layer_names.insert(57, conv_layer_names.pop())  # Ends up at 58
+    conv_layer_names.insert(64, conv_layer_names.pop())  # Ends up at 66
+    conv_layer_names.insert(57, conv_layer_names.pop(-2))
+    conv_layer_names.insert(65, conv_layer_names.pop(-2))
+
+    # Last 2 convolution layers are out of order - 64, 57
+    bn_layer_names.insert(57, bn_layer_names.pop())
+    bn_layer_names.insert(64, bn_layer_names.pop())
+
     j = 0
     for i in range(75):
         conv_layer_name = conv_layer_names[i] if i < len(conv_layer_names) else 'conv2d'
