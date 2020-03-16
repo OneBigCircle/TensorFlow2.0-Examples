@@ -97,7 +97,9 @@ def decode(conv_output, i=0):
     pred_conf = tf.sigmoid(conv_raw_conf)
     pred_prob = tf.sigmoid(conv_raw_prob)
 
-    return tf.concat([pred_xywh, pred_conf, pred_prob], axis=-1)
+    return tf.reshape(
+        tf.concat([pred_xywh, pred_conf, pred_prob], axis=-1),
+        (batch_size, output_size * output_size * 3, 5 + NUM_CLASS))
 
 def bbox_iou(boxes1, boxes2):
 
