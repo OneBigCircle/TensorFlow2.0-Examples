@@ -64,7 +64,7 @@ def YOLOv3(input_layer):
     conv_sobj_branch = common.convolutional(conv, (3, 3, 128, 256))
     conv_sbbox = common.convolutional(conv_sobj_branch, (1, 1, 256, 3*(NUM_CLASS +5)), activate=False, bn=False)
 
-    return [conv_sbbox, conv_mbbox, conv_lbbox]
+    return [conv_sbbox, conv_mbbox, conv_lbbox], [route_1, route_2, conv]
 
 def decode(conv_output, i=0):
     """
