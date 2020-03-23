@@ -26,6 +26,7 @@ IOU_LOSS_THRESH = cfg.YOLO.IOU_LOSS_THRESH
 
 def YOLOv3(input_layer):
     route_1, route_2, conv = backbone.darknet53(input_layer)
+    original_conv = conv
 
     conv = common.convolutional(conv, (1, 1, 1024,  512))
     conv = common.convolutional(conv, (3, 3,  512, 1024))
@@ -64,7 +65,7 @@ def YOLOv3(input_layer):
     conv_sobj_branch = common.convolutional(conv, (3, 3, 128, 256))
     conv_sbbox = common.convolutional(conv_sobj_branch, (1, 1, 256, 3*(NUM_CLASS +5)), activate=False, bn=False)
 
-    return [conv_sbbox, conv_mbbox, conv_lbbox], [conv_sobj_branch, conv_mobj_branch, conv_lobj_branch]
+    return [conv_sbbox, conv_mbbox, conv_lbbox], (route_1, route_2, original_conv)
 
 def decode(conv_output, i=0):
     """
